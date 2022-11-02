@@ -1,40 +1,41 @@
-const users = require("../models/users.model")
+const board = require("../models/board.model")
 const conn = require("../config/db");
 
-// ID 조회
 exports.findByID = function(req,res){
-    users.findByID(req.params.userID, function(err,result){
+    board.findByID(req.params.postID, function(err,result){
         if(err) res.send(err)
         res.json(result)
     })
 }
 
-// 유저 생성
 exports.create = function(req,res){
     console.log(req.query)
-    let sql = 'SELECT max(userID) as ID from users'
+    const today = new Date()
+    req.query.date = today.getFullYear().toString() + '-' + (today.getMonth()+1).toString() + '-' + today.getDate().toString() +' 9:00'
+    console.log(req.query.date)
+    console.log()
+    let sql = 'SELECT max(postID) as ID from board'
     conn.query(sql,(err, row, fields) => {
 		console.log("error: ", err);
 		console.log("입력될 ID: ", row[0]['ID']+1);
-        req.query.userID = row[0]['ID']+1
-        users.create(req.query, function(err,result){
+        req.query.postID = row[0]['ID']+1
+        board.create(req.query, function(err,result){
             if(err) res.send(err)
             res.json(result)
         })
 	});
 }
 
-// 유저 정보 수정
 exports.update = function(req,res){
-    users.update(req.query, function(err,result){
+    console.log(req.query)
+    board.update(req.query, function(err, result){
         if(err) res.send(err)
         res.json(result)
     })
 }
 
-// 유저 데이터 삭제
 exports.delete = function(req,res){
-    users.delete(req.params.userID, function(err,result){
+    board.delete(req.params.postID, function(err,result){
         if(err) res.send(err)
         res.json(result)
     })
