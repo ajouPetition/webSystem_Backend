@@ -10,13 +10,37 @@ let board = function(item){
     this.content = item.content
 }
 
+// 게시물 전체 조회
+board.viewAll = function(result){
+    let sql = 'SELECT postID, title, type, date FROM board'
+    conn.query(sql, (err,row,fields) =>{
+        if(err) result(err,null)
+        console.log("데이터: ",row)
+        result(null,row)
+    })
+}
+
+// 게시물 필터링 조회 (종류, 날짜 동시 가능)
+board.filter = function(option,result){
+    let sql = 'SELECT postID, title, type, date FROM board'
+    // 종류별
+    if (option.type != undefined) sql = sql + ' WHERE type = "' + option.type +'"'
+    // 날짜별
+    if (option.date != undefined) sql = sql + ' ORDER BY date ' + option.date
+    console.log(option.type, option.date)
+    conn.query(sql, option.type, (err,row,fields) =>{
+        if(err) result(err,null)
+        console.log("데이터: ",row)
+        result(null,row)
+    })
+}
+
 // ID 조회
 board.findByID = function(id, result){
     let sql = 'SELECT * FROM board WHERE postID = ?';
     conn.query(sql, id, (err,row,fields) => {
         console.log('Error:', err)
         if(err) result(err,null)
-
         console.log("데이터: ",row)
         result(null,row)
     })
