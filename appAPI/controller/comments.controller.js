@@ -11,18 +11,18 @@ exports.findByPostID = function(req,res){
 
 // 게시물별 댓글 조회
 exports.create = function(req,res){
-    console.log(req.query)
+    console.log(req.body)
     let today = new Date()
     today.setHours(today.getHours() + 9)
-    req.query.date = today.getFullYear().toString() + '-' + (today.getMonth()+1).toString() + '-' + today.getDate().toString() + ' ' + today.getHours().toString() + ':' + today.getMinutes().toString()
-    console.log(req.query.date)
+    req.body.date = today.getFullYear().toString() + '-' + (today.getMonth()+1).toString() + '-' + today.getDate().toString() + ' ' + today.getHours().toString() + ':' + today.getMinutes().toString()
+    console.log(req.body.date)
     console.log()
     let sql = 'SELECT max(commentID) as ID from comments'
     conn.query(sql,(err, row, fields) => {
 		console.log("error: ", err);
 		console.log("입력될 ID: ", row[0]['ID']+1);
-        req.query.commentID = row[0]['ID']+1
-        comments.create(req.query, function(err,result){
+        req.body.commentID = row[0]['ID']+1
+        comments.create(req.body, function(err,result){
             if(err) res.send(err)
             res.json(result)
         })
@@ -31,8 +31,8 @@ exports.create = function(req,res){
 
 // 댓글 수정
 exports.update = function(req,res){
-    console.log(req.query)
-    comments.update(req.query, function(err, result){
+    console.log(req.body)
+    comments.update(req.body, function(err, result){
         if(err) res.send(err)
         res.json(result)
     })
