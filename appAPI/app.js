@@ -1,6 +1,7 @@
 const createError = require('http-errors');
 const express = require('express');
 const path = require('path');
+const cors = require("cors");
 
 // 라우터 선언
 const usersRouter = require('./routes/users');
@@ -9,6 +10,7 @@ const commentsRouter = require('./routes/comments');
 
 const app = express();
 // 엔진 설정
+app.use(cors())
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
