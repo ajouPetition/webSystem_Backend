@@ -1,6 +1,6 @@
 const conn = require("../config/db");
 
-// 유저 모델 선언
+// 게시물 모델 선언
 let board = function(item){
     this.postID = item.postID
     this.title = item.title
