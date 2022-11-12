@@ -1,6 +1,14 @@
 const users = require("../models/users.model")
 const conn = require("../config/db");
 
+//로그인
+exports.login = function(req,res){
+    users.login(req.body, function(err, result){
+        if(err) res.send(err)
+        res.json(result)
+    })
+}
+
 // ID 조회
 exports.findByID = function(req,res){
     users.findByID(req.params.userID, function(err,result){
