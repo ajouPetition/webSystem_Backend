@@ -7,6 +7,21 @@ let users = function(item){
     this.password = item.password
 }
 
+// 로그인
+users.login = function(info, result){
+    data = [info.username, info.password]
+    let sql = 'SELECT * FROM users WHERE username = ? and password = ?'
+    conn.query(sql,data,(err,row,fields)=>{
+        console.log('Error:', err)
+        if(err) result(err,null)
+        else if(row.length != 1) result(null, {'status':'failed'})
+        else {
+            console.log("데이터: ",row)
+            result(null,{'status':'success','username':row[0].username})
+        }
+    })
+}
+
 // ID 조회
 users.findByID = function(userID, result){
     let sql = 'SELECT * FROM users WHERE userID = ?';

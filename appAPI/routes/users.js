@@ -3,6 +3,7 @@ var router = express.Router();
 const users = require("../controller/users.controller")
 
 // 도메인/api/users/ 주소
+router.post('/auth',users.login)
 router.get('/:userID', users.findByID);
 router.post('/register',users.create)
 router.put('/modify',users.update)
