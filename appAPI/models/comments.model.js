@@ -1,6 +1,6 @@
 const conn = require("../config/db");
 
-// 유저 모델 선언
+// 댓글 모델 선언
 let comments = function(item){
     this.commentID = item.commentID
     this.postID = item.postID
