@@ -12,7 +12,17 @@ let board = function(item){
 
 // 게시물 전체 조회
 board.viewAll = function(result){
-    let sql = 'SELECT postID, title, type, date FROM board'
+    let sql = 'SELECT b.*, a.cnt FROM board AS b LEFT OUTER JOIN (SELECT postID, count(*) AS cnt FROM agree GROUP BY postID) AS a on b.postID = a.postID'
+    conn.query(sql, (err,row,fields) =>{
+        if(err) result(err,null)
+        console.log("데이터: ",row)
+        result(null,row)
+    })
+}
+
+// 게시물 Top 3 조회 
+board.viewTop = function(result){
+    let sql = 'SELECT b.*, a.cnt FROM board AS b LEFT OUTER JOIN (SELECT postID, count(*) AS cnt FROM agree GROUP BY postID) AS a on b.postID = a.postID ORDER BY a.cnt DESC LIMIT 3'
     conn.query(sql, (err,row,fields) =>{
         if(err) result(err,null)
         console.log("데이터: ",row)
