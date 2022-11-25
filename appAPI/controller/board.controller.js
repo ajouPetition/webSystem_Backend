@@ -9,6 +9,14 @@ exports.viewAll = function(req,res){
     })
 }
 
+// 게시물 Top 3 조회
+exports.viewTop = function(req,res){
+    board.viewTop(function(err,result){
+        if(err) res.send(err)
+        res.json(result)
+    })
+}
+
 // 게시물 필터링 조회
 exports.filter = function(req,res){
     board.filter(req.body, function(err,result){
