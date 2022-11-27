@@ -21,9 +21,8 @@ board.countPosts = function (result) {
 };
 
 // 게시물 Limit
-
 board.viewLimit = function (x, y, result) {
-  let sql = `SELECT postID, title, type, date FROM board LIMIT ${x}, ${y}`;
+  let sql = `SELECT b.*, a.cnt FROM board AS b LEFT OUTER JOIN (SELECT postID, count(*) AS cnt FROM agree GROUP BY postID) AS a on b.postID = a.postID LIMIT ${x}, ${y}`;
   conn.query(sql, (err, row, fields) => {
     if (err) result(err, null);
     console.log('데이터: ', row);

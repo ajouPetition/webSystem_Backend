@@ -2,7 +2,6 @@ const board = require('../models/board.model');
 const conn = require('../config/db');
 
 // 게시물 카운트 수
-
 exports.countPosts = function (req, res) {
   board.countPosts(function (err, result) {
     if (err) res.send(err);
@@ -11,7 +10,6 @@ exports.countPosts = function (req, res) {
 };
 
 // 게시물 Limit
-
 exports.viewLimit = function (req, res) {
   board.viewLimit(
     parseInt(req.query.startAt),
