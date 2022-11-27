@@ -14,21 +14,21 @@ agree.addAgreeByPost = function(ID, result){
         console.log('Error:', err)
         if(err) result(err,null)
         console.log("OK",)
-        result(null,{'status':'success', 'action':'add Agree'})
+        result(null,{'status':'success', 'action':'동의 추가'})
     })
 }
 
-// 동의 취소하기
-agree.delAgreeByPost = function(ID, result){
-    let data = [ID.postID, ID.userID]
-    let sql = 'DELETE FROM agree WHERE postID=? and userID=?';
-    conn.query(sql, data, (err,row,fields) => {
-        console.log('Error:', err)
-        if(err) result(err,null)
-        console.log("OK",)
-        result(null,{'status':'success', 'action':'delete Agree'})
-    })
-}
+// 동의 취소하기 (사용 안함)
+// agree.delAgreeByPost = function(ID, result){
+//     let data = [ID.postID, ID.userID]
+//     let sql = 'DELETE FROM agree WHERE postID=? and userID=?';
+//     conn.query(sql, data, (err,row,fields) => {
+//         console.log('Error:', err)
+//         if(err) result(err,null)
+//         console.log("OK",)
+//         result(null,{'status':'success', 'action':'delete Agree'})
+//     })
+// }
 
 // 특정 게시물 동의 수
 agree.getAgreeByPost = function(ID, result){
