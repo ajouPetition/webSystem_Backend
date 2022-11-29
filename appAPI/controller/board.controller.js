@@ -31,7 +31,7 @@ exports.viewTop = function (req, res) {
 
 // 게시물 필터링 조회
 exports.filter = function (req, res) {
-  board.filter(req.body, function (err, result) {
+  board.filter(req.query, function (err, result) {
     if (err) return res.send(err);
     return res.json(result);
   });
