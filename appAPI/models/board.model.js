@@ -43,17 +43,27 @@ board.viewTop = function (result) {
 
 // 게시물 필터링 조회 (종류, 날짜 동시 가능)
 board.filter = function (option, result) {
-  let sql = 'SELECT postID, title, type, date FROM board';
+  let sql = 'SELECT b.*, a.cnt FROM board AS b LEFT OUTER JOIN (SELECT postID, count(*) AS cnt FROM agree GROUP BY postID) AS a on b.postID = a.postID';
   // 종류별
   if (option.type != undefined)
     sql = sql + ' WHERE type = "' + option.type + '"';
-  // 날짜별
-  if (option.date != undefined) sql = sql + ' ORDER BY date ' + option.date;
+  // 동의순(우선순위) / 날짜순
+  if (option.date != undefined || option.cnt != undefined){
+    sql = sql + ' ORDER BY'
+    if(option.cnt != undefined){
+      sql = sql + ' cnt ' + option.cnt
+      if(option.date != undefined) sql = sql + ','
+    }
+    if(option.date != undefined){
+      sql = sql + ' date ' + option.date
+    }
+    sql = sql + ` LIMIT ${option.x}, ${option.y}`
+  }
   console.log(option.type, option.date);
   conn.query(sql, option.type, (err, row, fields) => {
-    if (err) result(err, null);
+    if (err) return result(err, null);
     console.log('데이터: ', row);
-    result(null, row);
+    return result(null, row);
   });
 };
 
