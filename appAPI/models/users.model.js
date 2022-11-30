@@ -31,7 +31,7 @@ users.login = function (info, result) {
         },
         `${key}`,
         {
-          expiresIn: "15m", // 15분후 만료
+          expiresIn: "60m", // 60분후 만료
           issuer: "토큰발급자",
         }
       );
