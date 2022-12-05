@@ -3,7 +3,7 @@ const conn = require('../config/db');
 
 // 게시물 카운트 수
 exports.countPosts = function (req, res) {
-  board.countPosts(function (err, result) {
+  board.countPosts(req.query, function (err, result) {
     if (err) return res.send(err);
     return res.send(result);
   });
