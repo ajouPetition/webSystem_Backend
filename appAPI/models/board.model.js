@@ -47,7 +47,14 @@ board.filter = function (option, result) {
   let sql =
     'SELECT b.*, a.cnt FROM board AS b LEFT OUTER JOIN (SELECT postID, count(*) AS cnt FROM agree GROUP BY postID) AS a on b.postID = a.postID';
   // 종류별
-  if (option.type != '전체') sql = sql + ' WHERE type = "' + option.type + '"';
+  if (option.type != '전체'){
+    if (option.type == '기타'){
+      sql = sql + ' WHERE type NOT IN ("교육", "시설")'
+    }
+    else{
+      sql = sql + ' WHERE type = "' + option.type + '"';
+    }
+  }
   // 동의순(우선순위) / 날짜순
   sql = sql + ' ORDER BY';
   if (option.orderBy == 'cnt') {
@@ -58,6 +65,7 @@ board.filter = function (option, result) {
   sql = sql + ` LIMIT ${option.startAt}, ${option.limit}`;
 
   console.log(option.type, option.orderBy);
+  console.log(sql)
   conn.query(sql, option.type, (err, row, fields) => {
     if (err) return result(err, null);
     console.log('데이터: ', row);
