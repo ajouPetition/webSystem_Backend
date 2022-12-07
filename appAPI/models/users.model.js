@@ -45,10 +45,14 @@ users.login = function (info, result) {
   });
 };
 
-// ID 조회
-users.findByID = function (userID, result) {
-  let sql = "SELECT * FROM users WHERE userID = ?";
-  conn.query(sql, userID, (err, row, fields) => {
+// 조회
+users.findByID = function (name, result) {
+  let sql = `SELECT * 
+              FROM users 
+              WHERE userID IN (SELECT userID 
+                                FROM users 
+                                WHERE username = "${name}"`
+  conn.query(sql, (err, row, fields) => {
     console.log("Error:", err);
     if (err) result(err, null);
     console.log("데이터: ", row);
@@ -71,7 +75,11 @@ users.create = function (newUser, result) {
 // 유저 정보 수정
 users.update = function (user, result) {
   let data = [user.password, user.userID];
-  sql = "UPDATE users SET password = ? WHERE userID = ?";
+  sql = `UPDATE users 
+          SET password = ? 
+          WHERE userID IN (SELECT userID 
+                            FROM users 
+                            WHERE username = "${name}"`;
   conn.query(sql, data, (err, row, fields) => {
     console.log("error: ", err);
     if (err) result(err, null);
@@ -82,7 +90,11 @@ users.update = function (user, result) {
 
 // 유저 데이터 삭제
 users.delete = function (id, result) {
-  let sql = "DELETE FROM users WHERE userID = ?";
+  let sql = `DELETE 
+              FROM users 
+              WHERE userID IN (SELECT userID 
+                                FROM users 
+                                WHERE username = "${name}"`;
   conn.query(sql, id, (err, row, fields) => {
     console.log("error: ", err);
     if (err) result(err, null);
@@ -92,7 +104,7 @@ users.delete = function (id, result) {
 };
 
 // 유저 동의 데이터
-users.agreePosts = function(id, x, y, result){
+users.agreePosts = function(name, x, y, result){
   let sql = `SELECT b.*, a.cnt 
   FROM board AS b 
     LEFT OUTER JOIN 
@@ -103,12 +115,14 @@ users.agreePosts = function(id, x, y, result){
                         JOIN 
                         agree AS agr 
                         ON usr.userID = agr.userID 
-                      WHERE usr.userID = ${id} )
+                      WHERE usr.userID = (SELECT userID 
+                        FROM users 
+                        WHERE username = "${name}")
     AND 
     b.date BETWEEN DATE_ADD(NOW(),INTERVAL -2 MONTH ) AND NOW()
   ORDER BY date ASC
   LIMIT ${x}, ${y}`
-  conn.query(sql, id, (err, row, fields) => {
+  conn.query(sql, (err, row, fields) => {
     console.log("error: ", err);
     if (err) result(err, null);
     console.log("데이터: ", row);
@@ -116,4 +130,24 @@ users.agreePosts = function(id, x, y, result){
   });
 }
 
+// 유저 작성 청원
+users.getPosts = function(name, x, y, result){
+  let sql = `SELECT b.*, a.cnt 
+              FROM board AS b 
+                LEFT OUTER JOIN 
+                (SELECT postID, count(*) AS cnt FROM agree GROUP BY postID) AS a 
+                on b.postID = a.postID 
+              WHERE b.userID IN (SELECT userID 
+                                  FROM users 
+                                  WHERE username = "${name}")
+                AND
+                b.date BETWEEN DATE_ADD(NOW(),INTERVAL -2 MONTH ) AND NOW()
+              LIMIT ${x}, ${y}`
+  conn.query(sql, (err, row, fields) => {
+    console.log("error: ", err);
+    if (err) result(err, null);
+    console.log("데이터: ", row);
+    result(null, row);
+  });
+}
 module.exports = users;
