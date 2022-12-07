@@ -11,7 +11,7 @@ exports.login = function (req, res) {
 
 // ID 조회
 exports.findByID = function (req, res) {
-  users.findByID(req.params.userID, function (err, result) {
+  users.findByID(req.params.username, function (err, result) {
     if (err) return res.send(err);
     return res.json(result);
   });
@@ -19,7 +19,7 @@ exports.findByID = function (req, res) {
 
 // 유저 생성
 exports.create = function (req, res) {
-  console.log(req.body);
+  // console.log(req.body);
   let sql = "SELECT max(userID) as ID from users";
   conn.query(sql, (err, row, fields) => {
     console.log("error: ", err);
@@ -42,7 +42,7 @@ exports.update = function (req, res) {
 
 // 유저 데이터 삭제
 exports.delete = function (req, res) {
-  users.delete(req.params.userID, function (err, result) {
+  users.delete(req.params.username, function (err, result) {
     if (err) return res.send(err);
     return res.json(result);
   });
@@ -50,9 +50,19 @@ exports.delete = function (req, res) {
 
 // 유저 동의 데이터
 exports.agreePosts = function (req, res){
-  console.log(req.params.userID, Number(req.body.startAt), Number(req.body.limit))
-  users.agreePosts(req.params.userID, Number(req.body.startAt), Number(req.body.limit),
+  // console.log(req.params.username, Number(req.body.startAt), Number(req.body.limit))
+  users.agreePosts(req.params.username, Number(req.body.startAt), Number(req.body.limit),
    function (err, result){
+    if (err) return res.send(err);
+    return res.json(result);
+  })
+}
+
+// 유저 작성 청원
+exports.getPosts = function(req, res){
+  // console.log(req.params.username, Number(req.body.startAt), Number(req.body.limit))
+  users.getPosts(req.params.username, Number(req.body.startAt), Number(req.body.limit),
+  function (err, result){
     if (err) return res.send(err);
     return res.json(result);
   })
