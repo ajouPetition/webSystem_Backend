@@ -71,13 +71,13 @@ exports.create = function (req, res) {
 };
 
 // 게시물 수정 <- 청원 내용이 수정될 가능성인데 추가할지 모르겠음
-exports.update = function (req, res) {
-  console.log(req.body);
-  board.update(req.body, function (err, result) {
-    if (err) return res.send(err);
-    return res.json(result);
-  });
-};
+// exports.update = function (req, res) {
+//   console.log(req.body);
+//   board.update(req.body, function (err, result) {
+//     if (err) return res.send(err);
+//     return res.json(result);
+//   });
+// };
 
 // 게시물 삭제
 exports.delete = function (req, res) {
