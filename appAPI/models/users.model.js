@@ -94,12 +94,18 @@ users.delete = function (id, result) {
 // 유저 동의 데이터
 users.agreePosts = function(id, x, y, result){
   let sql = `SELECT b.*, a.cnt 
-  FROM board AS b LEFT OUTER JOIN (SELECT postID, count(*) AS cnt FROM agree GROUP BY postID) AS a 
+  FROM board AS b 
+    LEFT OUTER JOIN 
+    (SELECT postID, count(*) AS cnt FROM agree GROUP BY postID) AS a 
     ON b.postID = a.postID 
-  WHERE 
-    b.postID IN (SELECT agr.postID FROM users AS usr JOIN agree AS agr ON usr.userID = agr.userID WHERE usr.userID = ${id} )
-      AND 
-    date BETWEEN DATE_ADD(NOW(),INTERVAL -1 MONTH ) AND NOW()
+  WHERE b.postID IN ( SELECT agr.postID 
+                      FROM users AS usr 
+                        JOIN 
+                        agree AS agr 
+                        ON usr.userID = agr.userID 
+                      WHERE usr.userID = ${id} )
+    AND 
+    b.date BETWEEN DATE_ADD(NOW(),INTERVAL -2 MONTH ) AND NOW()
   ORDER BY date ASC
   LIMIT ${x}, ${y}`
   conn.query(sql, id, (err, row, fields) => {
