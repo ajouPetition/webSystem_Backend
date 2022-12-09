@@ -26,7 +26,10 @@ exports.create = function (req, res) {
     console.log("입력될 ID: ", row[0]["ID"] + 1);
     req.body.userID = row[0]["ID"] + 1;
     users.create(req.body, function (err, result) {
-      if (err) return res.send(err);
+      if (err) {
+        console.log("error 내용 : ", err.Error);
+        return res.json(err);
+      }
       return res.json(result);
     });
   });
@@ -42,16 +45,16 @@ exports.update = function (req, res) {
 
 // 유저 데이터 삭제
 exports.delete = function (req, res) {
-  let sql = `SELECT userID FROM users WHERE username = "${req.params.username}"`
+  let sql = `SELECT userID FROM users WHERE username = "${req.params.username}"`;
   conn.query(sql, (err, row, fields) => {
     console.log("error: ", err);
-    console.log("삭제될 ID: ", row[0]['userID']);
-    let id = row[0]["userID"]
+    console.log("삭제될 ID: ", row[0]["userID"]);
+    let id = row[0]["userID"];
     users.delete(id, function (err, result) {
       if (err) return res.send(err);
       return res.json(result);
     });
-  })
+  });
 };
 
 // 유저 동의 데이터
