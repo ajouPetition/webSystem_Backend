@@ -63,10 +63,15 @@ users.findByID = function (name, result) {
 // 유저 생성
 users.create = function (newUser, result) {
   let data = [newUser.userID, newUser.username, newUser.password];
+  console.log(data);
   sql = "INSERT INTO users(userID, username, password) VALUES(?, ?, ?)";
   conn.query(sql, data, (err, row, fields) => {
-    console.log("Error:", err);
-    if (err) return result(err, null);
+    // console.log("Error:", err);
+    if (err) {
+      console.log("error 발생");
+      return result(err, null);
+    }
+
     console.log(row);
     return result(null, { status: "success" });
   });
@@ -90,17 +95,18 @@ users.update = function (user, result) {
 
 // 유저 데이터 삭제
 users.delete = function (id, result) {
-  let sql1 = `DELETE FROM comments WHERE userID = ${id}; `          
-  let sql2 = `DELETE FROM agree WHERE userID = ${id}; `
-  let sql3 = `DELETE FROM board WHERE userID = ${id}; `
-  let sql4 = `DELETE FROM users WHERE userID = ${id}; `
+  let sql1 = `DELETE FROM comments WHERE userID = ${id}; `;
+  let sql2 = `DELETE FROM agree WHERE userID = ${id}; `;
+  let sql3 = `DELETE FROM board WHERE userID = ${id}; `;
+  let sql4 = `DELETE FROM users WHERE userID = ${id}; `;
   conn.query(sql1, (err, row, fields) => {
-    conn.query(sql2,(err,row)=>{
-      conn.query(sql3,(err,row)=>{
-        conn.query(sql4, (err,row)=>{
+    conn.query(sql2, (err, row) => {
+      conn.query(sql3, (err, row) => {
+        conn.query(sql4, (err, row) => {
           console.log("error: ", err);
           if (err) return result(err, null);
           console.log("삭제된 데이터 수: ", row.affectedRows);
+
           return result(null, { status: "success" });
         })
       })
