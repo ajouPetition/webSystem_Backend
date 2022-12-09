@@ -12,9 +12,9 @@ agree.addAgreeByPost = function(ID, result){
     let sql = 'INSERT INTO agree(postID,userID) VALUES (?,?)';
     conn.query(sql, data, (err,row,fields) => {
         console.log('Error:', err)
-        if(err) result(err,null)
+        if(err) return result(err,null)
         console.log("OK",)
-        result(null,{'status':'success', 'action':'동의 추가'})
+        return result(null,{'status':'success', 'action':'동의 추가'})
     })
 }
 
@@ -35,9 +35,9 @@ agree.getAgreeByPost = function(ID, result){
     let sql = 'SELECT count(*) as num FROM agree WHERE postID=?';
     conn.query(sql, ID, (err,row,fields) => {
         console.log('Error:', err)
-        if(err) result(err,null)
+        if(err) return result(err,null)
         console.log('게시물',ID,"동의 개수: ",row[0].num)
-        result(null,row[0].num)
+        return result(null,row[0].num)
     })
 }
 

@@ -13,9 +13,9 @@ let comments = function (item) {
 comments.countComments = function (id, result) {
   let sql = `SELECT COUNT(*) FROM comments WHERE postID = ?`;
   conn.query(sql, id, (err, row, fields) => {
-    if (err) result(err, null);
+    if (err) return result(err, null);
     console.log('데이터: ', row);
-    result(null, row);
+    return result(null, row);
   });
 };
 
@@ -23,9 +23,9 @@ comments.countComments = function (id, result) {
 comments.findByPostID = function (id, x, y, result) {
   let sql = `SELECT * FROM comments WHERE postID = ? LIMIT ${x}, ${y}`;
   conn.query(sql, id, (err, row, fields) => {
-    if (err) result(err, null);
+    if (err) return result(err, null);
     console.log('데이터: ', row);
-    result(null, row);
+    return result(null, row);
   });
 };
 
@@ -42,9 +42,9 @@ comments.create = function (newComment, result) {
     'INSERT INTO comments(commentID, postID, userID, date, content) VALUES(?, ?, ?, ?, ?)';
   conn.query(sql, data, (err, row, fields) => {
     console.log('Error:', err);
-    if (err) result(err, null);
+    if (err) return result(err, null);
     console.log('OK');
-    result(null, { status: 'success' });
+    return result(null, { status: 'success' });
   });
 };
 
@@ -54,9 +54,9 @@ comments.update = function (newComment, result) {
   let sql = 'UPDATE comments SET content = ? WHERE commentID = ?';
   conn.query(sql, data, (err, row, fields) => {
     console.log('error: ', err);
-    if (err) result(err, null);
+    if (err) return result(err, null);
     console.log('변화한 데이터 수: ', row.affectedRows);
-    result(null, { status: 'success' });
+    return result(null, { status: 'success' });
   });
 };
 
@@ -65,9 +65,9 @@ comments.delete = function (id, result) {
   let sql = 'DELETE FROM comments WHERE commentID = ?';
   conn.query(sql, id, (err, row, fields) => {
     console.log('error: ', err);
-    if (err) result(err, null);
+    if (err) return result(err, null);
     console.log('삭제된 데이터 수: ', row.affectedRows);
-    result(null, { status: 'success' });
+    return result(null, { status: 'success' });
   });
 };
 
