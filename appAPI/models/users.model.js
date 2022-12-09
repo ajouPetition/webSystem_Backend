@@ -90,11 +90,8 @@ users.update = function (user, result) {
 
 // 유저 데이터 삭제
 users.delete = function (id, result) {
-  let sql = `DELETE 
-              FROM users 
-              WHERE userID IN (SELECT userID 
-                                FROM users 
-                                WHERE username = "${name}"`;
+  console.log("id : ", id);
+  let sql = `DELETE FROM users WHERE username = '${id}'`;
   conn.query(sql, id, (err, row, fields) => {
     console.log("error: ", err);
     if (err) result(err, null);
