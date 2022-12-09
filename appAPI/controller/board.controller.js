@@ -37,6 +37,14 @@ exports.filter = function (req, res) {
   });
 };
 
+// 만료 게시물 필터링 조회
+exports.expireFilter = function (req, res) {
+  board.expireFilter(req.query, function (err, result) {
+    if (err) return res.send(err);
+    return res.json(result);
+  });
+};
+
 // ID 조회
 exports.findByID = function (req, res) {
   board.findByID(req.params.postID, function (err, result) {
