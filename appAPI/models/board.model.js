@@ -74,15 +74,15 @@ board.expireFilter = function (option, result) {
       sql = sql + 'WHERE date NOT BETWEEN DATE_ADD(NOW(),INTERVAL -2 MONTH ) AND NOW()'
       break;
     default:
-      sql = sql + 'WHERE type = "' + option.type + '" AND date NOT BETWEEN DATE_ADD(NOW(),INTERVAL -2 MONTH ) AND NOW()';
+      sql = sql + 'WHERE type = "' + option.type + '" AND (date NOT BETWEEN DATE_ADD(NOW(),INTERVAL -2 MONTH ) AND NOW())';
       break;
   }
-  // 정렬순서
-  sql = sql + ' ORDER BY';
-  if (option.orderBy == 'cnt') {
-    sql = sql + ' cnt desc';
-  } else {
-    sql = sql + ' date ' + option.orderBy;
+  // 달성여부
+  console.log(option.pass)
+  if (option.pass == 100){
+    sql = sql + ' AND a.cnt >= 100'
+  }else{
+    sql = sql + ' AND (a.cnt < 100 OR a.cnt IS NULL)'
   }
   sql = sql + ` LIMIT ${option.startAt}, ${option.limit}`;
   conn.query(sql, option.type, (err, row, fields) => {
