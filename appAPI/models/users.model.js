@@ -47,11 +47,9 @@ users.login = function (info, result) {
 
 // 조회
 users.findByID = function (name, result) {
-  let sql = `SELECT * 
+  let sql = ` SELECT * 
               FROM users 
-              WHERE userID IN (SELECT userID 
-                                FROM users 
-                                WHERE username = "${name}"`;
+              WHERE username = "${name}" `;
   conn.query(sql, (err, row, fields) => {
     console.log("Error:", err);
     if (err) return result(err, null);

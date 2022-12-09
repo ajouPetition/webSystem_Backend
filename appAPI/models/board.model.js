@@ -28,6 +28,23 @@ board.countPosts = function (option, result) {
   });
 };
 
+// 만료된 게시물 전체 카운트 수
+board.expireCountPosts = function (option, result) {
+  let sql = `SELECT COUNT(*) FROM board WHERE (date NOT BETWEEN DATE_ADD(NOW(),INTERVAL -2 MONTH) AND NOW())`;
+  // 종류별
+  switch (option.type) {
+    case '전체':
+      break;
+    default:
+      sql = sql + 'AND type = "' + option.type + '"';
+      break;
+  }
+  conn.query(sql, (err, row, fields) => {
+    if (err) return result(err, null);
+    console.log('데이터: ', row);
+    return result(null, row);
+  });
+};
 // 게시물 Limit
 board.viewLimit = function (x, y, result) {
   let sql = `SELECT b.*, a.cnt 

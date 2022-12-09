@@ -9,6 +9,14 @@ exports.countPosts = function (req, res) {
   });
 };
 
+//만료 게시물 카운트 수
+exports.expireCountPosts = function (req, res) {
+  board.expireCountPosts(req.query, function (err, result) {
+    if (err) return res.send(err);
+    return res.send(result);
+  });
+};
+
 // 게시물 Limit
 exports.viewLimit = function (req, res) {
   board.viewLimit(

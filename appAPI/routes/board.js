@@ -7,6 +7,7 @@ router.get('/list', board.viewLimit);
 router.get('/listAll', board.countPosts);
 router.get('/listTop', board.viewTop);
 router.get('/list/filter', board.filter);
+router.get('/exlistAll', board.expireCountPosts)
 router.get('/exlist/filter', board.expireFilter);
 router.get('/view/:postID', board.findByID);
 router.post('/upload', board.create);
