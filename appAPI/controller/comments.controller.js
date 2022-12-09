@@ -4,8 +4,8 @@ const conn = require('../config/db');
 // 게시물 댓글 갯수 조회
 exports.countComments = function (req, res) {
   comments.countComments(parseInt(req.params.postID), function (err, result) {
-    if (err) res.send(err);
-    res.send(result);
+    if (err) return res.send(err);
+    return res.send(result);
   });
 };
 
@@ -16,8 +16,8 @@ exports.findByPostID = function (req, res) {
     parseInt(req.query.startAt),
     parseInt(req.query.limit),
     function (err, result) {
-      if (err) res.send(err);
-      res.json(result);
+      if (err) return res.send(err);
+      return res.json(result);
     }
   );
 };
@@ -45,8 +45,8 @@ exports.create = function (req, res) {
     console.log('입력될 ID: ', row[0]['ID'] + 1);
     req.body.commentID = row[0]['ID'] + 1;
     comments.create(req.body, function (err, result) {
-      if (err) res.send(err);
-      res.json(result);
+      if (err) return res.send(err);
+      return res.json(result);
     });
   });
 };
@@ -55,15 +55,15 @@ exports.create = function (req, res) {
 exports.update = function (req, res) {
   console.log(req.body);
   comments.update(req.body, function (err, result) {
-    if (err) res.send(err);
-    res.json(result);
+    if (err) return res.send(err);
+    return res.json(result);
   });
 };
 
 // 댓글 삭제
 exports.delete = function (req, res) {
   comments.delete(req.params.commentID, function (err, result) {
-    if (err) res.send(err);
-    res.json(result);
+    if (err) return res.send(err);
+    return res.json(result);
   });
 };

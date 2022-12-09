@@ -54,9 +54,9 @@ users.findByID = function (name, result) {
                                 WHERE username = "${name}"`;
   conn.query(sql, (err, row, fields) => {
     console.log("Error:", err);
-    if (err) result(err, null);
+    if (err) return result(err, null);
     console.log("데이터: ", row);
-    result(null, row);
+    return result(null, row);
   });
 };
 
@@ -71,9 +71,9 @@ users.create = function (newUser, result) {
       console.log("error 발생");
       return result(err, null);
     }
-    console.log("@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+
     console.log(row);
-    result(null, { status: "success" });
+    return result(null, { status: "success" });
   });
 };
 
@@ -87,9 +87,9 @@ users.update = function (user, result) {
                             WHERE username = "${name}"`;
   conn.query(sql, data, (err, row, fields) => {
     console.log("error: ", err);
-    if (err) result(err, null);
+    if (err) return result(err, null);
     console.log("변화한 데이터 수: ", row.affectedRows);
-    result(null, { status: "success" });
+    return result(null, { status: "success" });
   });
 };
 
@@ -104,12 +104,13 @@ users.delete = function (id, result) {
       conn.query(sql3, (err, row) => {
         conn.query(sql4, (err, row) => {
           console.log("error: ", err);
-          if (err) result(err, null);
+          if (err) return result(err, null);
           console.log("삭제된 데이터 수: ", row.affectedRows);
-          result(null, { status: "success" });
-        });
-      });
-    });
+
+          return result(null, { status: "success" });
+        })
+      })
+    })
   });
 };
 
@@ -134,9 +135,9 @@ users.agreePosts = function (name, x, y, result) {
   LIMIT ${x}, ${y}`;
   conn.query(sql, (err, row, fields) => {
     console.log("error: ", err);
-    if (err) result(err, null);
+    if (err) return result(err, null);
     console.log("데이터: ", row);
-    result(null, row);
+    return result(null, row);
   });
 };
 
@@ -155,9 +156,9 @@ users.getPosts = function (name, x, y, result) {
               LIMIT ${x}, ${y}`;
   conn.query(sql, (err, row, fields) => {
     console.log("error: ", err);
-    if (err) result(err, null);
+    if (err) return result(err, null);
     console.log("데이터: ", row);
-    result(null, row);
+    return result(null, row);
   });
 };
 module.exports = users;
