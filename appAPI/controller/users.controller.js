@@ -49,21 +49,29 @@ exports.delete = function (req, res) {
 };
 
 // 유저 동의 데이터
-exports.agreePosts = function (req, res){
+exports.agreePosts = function (req, res) {
   // console.log(req.params.username, Number(req.body.startAt), Number(req.body.limit))
-  users.agreePosts(req.params.username, Number(req.body.startAt), Number(req.body.limit),
-   function (err, result){
-    if (err) return res.send(err);
-    return res.json(result);
-  })
-}
+  users.agreePosts(
+    req.query.username,
+    Number(req.query.startAt),
+    Number(req.query.limit),
+    function (err, result) {
+      if (err) return res.send(err);
+      return res.json(result);
+    }
+  );
+};
 
 // 유저 작성 청원
-exports.getPosts = function(req, res){
+exports.getPosts = function (req, res) {
   // console.log(req.params.username, Number(req.body.startAt), Number(req.body.limit))
-  users.getPosts(req.params.username, Number(req.body.startAt), Number(req.body.limit),
-  function (err, result){
-    if (err) return res.send(err);
-    return res.json(result);
-  })
-}
+  users.getPosts(
+    req.query.username,
+    Number(req.query.startAt),
+    Number(req.query.limit),
+    function (err, result) {
+      if (err) return res.send(err);
+      return res.json(result);
+    }
+  );
+};

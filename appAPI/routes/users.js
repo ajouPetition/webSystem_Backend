@@ -5,12 +5,12 @@ const { auth } = require("../middleware/authmiddleware");
 
 // 도메인/api/users/ 주소
 router.post("/login", users.login);
+router.get("/agree", users.agreePosts);
+router.get("/posts", users.getPosts);
 router.get("/:username", users.findByID);
 router.post("/register", users.create);
 router.put("/modify", users.update);
 router.delete("/delete/:username", users.delete);
-router.get("/agree/:username", users.agreePosts);
-router.get("/posts/:username",users.getPosts)
 
 // 토큰을 검증하는 엔드포인트
 router.get("/auth/payload", auth, (req, res) => {

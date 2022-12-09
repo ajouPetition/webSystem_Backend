@@ -51,7 +51,7 @@ users.findByID = function (name, result) {
               FROM users 
               WHERE userID IN (SELECT userID 
                                 FROM users 
-                                WHERE username = "${name}"`
+                                WHERE username = "${name}"`;
   conn.query(sql, (err, row, fields) => {
     console.log("Error:", err);
     if (err) result(err, null);
@@ -90,11 +90,8 @@ users.update = function (user, result) {
 
 // 유저 데이터 삭제
 users.delete = function (id, result) {
-  let sql = `DELETE 
-              FROM users 
-              WHERE userID IN (SELECT userID 
-                                FROM users 
-                                WHERE username = "${name}"`;
+  console.log("id : ", id);
+  let sql = `DELETE FROM users WHERE username = '${id}'`;
   conn.query(sql, id, (err, row, fields) => {
     console.log("error: ", err);
     if (err) result(err, null);
@@ -104,7 +101,7 @@ users.delete = function (id, result) {
 };
 
 // 유저 동의 데이터
-users.agreePosts = function(name, x, y, result){
+users.agreePosts = function (name, x, y, result) {
   let sql = `SELECT b.*, a.cnt 
   FROM board AS b 
     LEFT OUTER JOIN 
@@ -117,21 +114,21 @@ users.agreePosts = function(name, x, y, result){
                         ON usr.userID = agr.userID 
                       WHERE usr.userID = (SELECT userID 
                         FROM users 
-                        WHERE username = "${name}")
+                        WHERE username = "${name}"))
     AND 
     b.date BETWEEN DATE_ADD(NOW(),INTERVAL -2 MONTH ) AND NOW()
   ORDER BY date ASC
-  LIMIT ${x}, ${y}`
+  LIMIT ${x}, ${y}`;
   conn.query(sql, (err, row, fields) => {
     console.log("error: ", err);
     if (err) result(err, null);
     console.log("데이터: ", row);
     result(null, row);
   });
-}
+};
 
 // 유저 작성 청원
-users.getPosts = function(name, x, y, result){
+users.getPosts = function (name, x, y, result) {
   let sql = `SELECT b.*, a.cnt 
               FROM board AS b 
                 LEFT OUTER JOIN 
@@ -142,12 +139,12 @@ users.getPosts = function(name, x, y, result){
                                   WHERE username = "${name}")
                 AND
                 b.date BETWEEN DATE_ADD(NOW(),INTERVAL -2 MONTH ) AND NOW()
-              LIMIT ${x}, ${y}`
+              LIMIT ${x}, ${y}`;
   conn.query(sql, (err, row, fields) => {
     console.log("error: ", err);
     if (err) result(err, null);
     console.log("데이터: ", row);
     result(null, row);
   });
-}
+};
 module.exports = users;
