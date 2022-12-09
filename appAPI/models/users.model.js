@@ -90,13 +90,21 @@ users.update = function (user, result) {
 
 // 유저 데이터 삭제
 users.delete = function (id, result) {
-  console.log("id : ", id);
-  let sql = `DELETE FROM users WHERE username = '${id}'`;
-  conn.query(sql, id, (err, row, fields) => {
-    console.log("error: ", err);
-    if (err) result(err, null);
-    console.log("삭제된 데이터 수: ", row.affectedRows);
-    result(null, { status: "success" });
+  let sql1 = `DELETE FROM comments WHERE userID = ${id}; `          
+  let sql2 = `DELETE FROM agree WHERE userID = ${id}; `
+  let sql3 = `DELETE FROM board WHERE userID = ${id}; `
+  let sql4 = `DELETE FROM users WHERE userID = ${id}; `
+  conn.query(sql1, (err, row, fields) => {
+    conn.query(sql2,(err,row)=>{
+      conn.query(sql3,(err,row)=>{
+        conn.query(sql4, (err,row)=>{
+          console.log("error: ", err);
+          if (err) result(err, null);
+          console.log("삭제된 데이터 수: ", row.affectedRows);
+          result(null, { status: "success" });
+        })
+      })
+    })
   });
 };
 

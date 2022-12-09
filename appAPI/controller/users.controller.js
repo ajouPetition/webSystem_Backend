@@ -42,10 +42,16 @@ exports.update = function (req, res) {
 
 // 유저 데이터 삭제
 exports.delete = function (req, res) {
-  users.delete(req.params.username, function (err, result) {
-    if (err) return res.send(err);
-    return res.json(result);
-  });
+  let sql = `SELECT userID FROM users WHERE username = "${req.params.username}"`
+  conn.query(sql, (err, row, fields) => {
+    console.log("error: ", err);
+    console.log("삭제될 ID: ", row[0]['userID']);
+    let id = row[0]["userID"]
+    users.delete(id, function (err, result) {
+      if (err) return res.send(err);
+      return res.json(result);
+    });
+  })
 };
 
 // 유저 동의 데이터
