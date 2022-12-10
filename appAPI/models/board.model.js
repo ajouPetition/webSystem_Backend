@@ -70,7 +70,7 @@ board.viewTop = function (result) {
                 ON b.postID = a.postID 
               WHERE b.date BETWEEN DATE_ADD(NOW(),INTERVAL -60 DAY ) AND DATE_ADD(NOW(),INTERVAL 1 DAY)
               ORDER BY a.cnt DESC 
-              LIMIT 3`
+              LIMIT 3`;
   conn.query(sql, (err, row, fields) => {
     if (err) return result(err, null);
     console.log('데이터: ', row);
@@ -84,22 +84,28 @@ board.expireFilter = function (option, result) {
               FROM board AS b 
                 LEFT OUTER JOIN 
                 (SELECT postID, count(*) AS cnt FROM agree GROUP BY postID) AS a 
-                ON b.postID = a.postID `
+                ON b.postID = a.postID `;
   // 종류별
   switch (option.type) {
     case '전체':
-      sql = sql + 'WHERE date NOT BETWEEN DATE_ADD(NOW(),INTERVAL -60 DAY ) AND DATE_ADD(NOW(),INTERVAL 1 DAY)'
+      sql =
+        sql +
+        'WHERE date NOT BETWEEN DATE_ADD(NOW(),INTERVAL -60 DAY ) AND DATE_ADD(NOW(),INTERVAL 1 DAY)';
       break;
     default:
-      sql = sql + 'WHERE type = "' + option.type + '" AND (date NOT BETWEEN DATE_ADD(NOW(),INTERVAL 60 DAY ) AND DATE_ADD(NOW(),INTERVAL 1 DAY) )';
+      sql =
+        sql +
+        'WHERE type = "' +
+        option.type +
+        '" AND (date NOT BETWEEN DATE_ADD(NOW(),INTERVAL -60 DAY ) AND DATE_ADD(NOW(),INTERVAL 1 DAY) )';
       break;
   }
   // 달성여부
-  console.log(option.pass)
-  if (option.pass == 100){
-    sql = sql + ' AND a.cnt >= 100'
-  }else{
-    sql = sql + ' AND (a.cnt < 100 OR a.cnt IS NULL)'
+  console.log(option.pass);
+  if (option.pass == 100) {
+    sql = sql + ' AND a.cnt >= 100';
+  } else {
+    sql = sql + ' AND (a.cnt < 100 OR a.cnt IS NULL)';
   }
   sql = sql + ` LIMIT ${option.startAt}, ${option.limit}`;
   conn.query(sql, option.type, (err, row, fields) => {
@@ -116,7 +122,7 @@ board.filter = function (option, result) {
                 LEFT OUTER JOIN 
                 (SELECT postID, count(*) AS cnt FROM agree GROUP BY postID) AS a 
                 ON b.postID = a.postID 
-              WHERE date BETWEEN DATE_ADD(NOW(),INTERVAL -60 DAY ) AND DATE_ADD(NOW(),INTERVAL 1 DAY) `
+              WHERE date BETWEEN DATE_ADD(NOW(),INTERVAL -60 DAY ) AND DATE_ADD(NOW(),INTERVAL 1 DAY) `;
   // 종류별
   switch (option.type) {
     case '전체':

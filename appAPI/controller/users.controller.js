@@ -1,10 +1,10 @@
-const users = require("../models/users.model");
-const conn = require("../config/db");
+const users = require('../models/users.model');
+const conn = require('../config/db');
 
 //로그인
 exports.login = function (req, res) {
   users.login(req.body, function (err, result) {
-    if (err) return res.send(err);
+    if (err) return res.status(500).send(err);
     return res.json(result);
   });
 };
@@ -20,14 +20,14 @@ exports.findByID = function (req, res) {
 // 유저 생성
 exports.create = function (req, res) {
   // console.log(req.body);
-  let sql = "SELECT max(userID) as ID from users";
+  let sql = 'SELECT max(userID) as ID from users';
   conn.query(sql, (err, row, fields) => {
-    console.log("error: ", err);
-    console.log("입력될 ID: ", row[0]["ID"] + 1);
-    req.body.userID = row[0]["ID"] + 1;
+    console.log('error: ', err);
+    console.log('입력될 ID: ', row[0]['ID'] + 1);
+    req.body.userID = row[0]['ID'] + 1;
     users.create(req.body, function (err, result) {
       if (err) {
-        console.log("error 내용 : ", err.Error);
+        console.log('error 내용 : ', err.Error);
         return res.json(err);
       }
       return res.json(result);
@@ -47,9 +47,9 @@ exports.update = function (req, res) {
 exports.delete = function (req, res) {
   let sql = `SELECT userID FROM users WHERE username = "${req.params.username}"`;
   conn.query(sql, (err, row, fields) => {
-    console.log("error: ", err);
-    console.log("삭제될 ID: ", row[0]["userID"]);
-    let id = row[0]["userID"];
+    console.log('error: ', err);
+    console.log('삭제될 ID: ', row[0]['userID']);
+    let id = row[0]['userID'];
     users.delete(id, function (err, result) {
       if (err) return res.send(err);
       return res.json(result);

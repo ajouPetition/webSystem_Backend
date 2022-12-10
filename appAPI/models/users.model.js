@@ -1,6 +1,6 @@
-const jwt = require("jsonwebtoken");
-const conn = require("../config/db");
-require("dotenv").config();
+const jwt = require('jsonwebtoken');
+const conn = require('../config/db');
+require('dotenv').config();
 
 // 유저 모델 선언
 let users = function (item) {
@@ -12,33 +12,33 @@ let users = function (item) {
 // 로그인과 토큰 생성
 users.login = function (info, result) {
   data = [info.username, info.password];
-  let sql = "SELECT * FROM users WHERE username = ? and password = ?";
+  let sql = 'SELECT * FROM users WHERE username = ? and password = ?';
   conn.query(sql, data, (err, row, fields) => {
-    console.log("Error:", err);
+    console.log('Error:', err);
     if (err) result(err, null);
-    else if (row.length != 1) result(null, { status: "failed" });
+    else if (row.length != 1) result(true, { status: 'failed' });
     else {
-      console.log("데이터: ", row);
+      console.log('데이터: ', row);
       // result(null,{'status':'success','username':row[0].username})
-      const key = process.env.SECRETE_KEY;
-      let token = "";
+      const key = process.env.JMT_KEY;
+      let token = '';
 
       // jwt.sign(payload, secretOrPrivateKey, [options, callback])
       token = jwt.sign(
         {
-          type: "JWT",
+          type: 'JWT',
           username: row[0].username,
         },
         `${key}`,
         {
-          expiresIn: "60m", // 60분후 만료
-          issuer: "토큰발급자",
+          expiresIn: '60m', // 60분후 만료
+          issuer: '토큰발급자',
         }
       );
       // response
       return result(null, {
-        status: "success",
-        message: "token is created",
+        status: 'success',
+        message: 'token is created',
         token: token,
       });
     }
@@ -51,9 +51,9 @@ users.findByID = function (name, result) {
               FROM users 
               WHERE username = "${name}" `;
   conn.query(sql, (err, row, fields) => {
-    console.log("Error:", err);
+    console.log('Error:', err);
     if (err) return result(err, null);
-    console.log("데이터: ", row);
+    console.log('데이터: ', row);
     return result(null, row);
   });
 };
@@ -62,16 +62,16 @@ users.findByID = function (name, result) {
 users.create = function (newUser, result) {
   let data = [newUser.userID, newUser.username, newUser.password];
   console.log(data);
-  sql = "INSERT INTO users(userID, username, password) VALUES(?, ?, ?)";
+  sql = 'INSERT INTO users(userID, username, password) VALUES(?, ?, ?)';
   conn.query(sql, data, (err, row, fields) => {
     // console.log("Error:", err);
     if (err) {
-      console.log("error 발생");
+      console.log('error 발생');
       return result(err, null);
     }
 
     console.log(row);
-    return result(null, { status: "success" });
+    return result(null, { status: 'success' });
   });
 };
 
@@ -84,10 +84,10 @@ users.update = function (user, result) {
                             FROM users 
                             WHERE username = "${name}"`;
   conn.query(sql, data, (err, row, fields) => {
-    console.log("error: ", err);
+    console.log('error: ', err);
     if (err) return result(err, null);
-    console.log("변화한 데이터 수: ", row.affectedRows);
-    return result(null, { status: "success" });
+    console.log('변화한 데이터 수: ', row.affectedRows);
+    return result(null, { status: 'success' });
   });
 };
 
@@ -101,14 +101,14 @@ users.delete = function (id, result) {
     conn.query(sql2, (err, row) => {
       conn.query(sql3, (err, row) => {
         conn.query(sql4, (err, row) => {
-          console.log("error: ", err);
+          console.log('error: ', err);
           if (err) return result(err, null);
-          console.log("삭제된 데이터 수: ", row.affectedRows);
+          console.log('삭제된 데이터 수: ', row.affectedRows);
 
-          return result(null, { status: "success" });
-        })
-      })
-    })
+          return result(null, { status: 'success' });
+        });
+      });
+    });
   });
 };
 
@@ -132,9 +132,9 @@ users.agreePosts = function (name, x, y, result) {
   ORDER BY date ASC
   LIMIT ${x}, ${y}`;
   conn.query(sql, (err, row, fields) => {
-    console.log("error: ", err);
+    console.log('error: ', err);
     if (err) return result(err, null);
-    console.log("데이터: ", row);
+    console.log('데이터: ', row);
     return result(null, row);
   });
 };
@@ -153,9 +153,9 @@ users.getPosts = function (name, x, y, result) {
                 b.date BETWEEN DATE_ADD(NOW(),INTERVAL -60 DAY ) AND DATE_ADD(NOW(),INTERVAL 1 DAY)
               LIMIT ${x}, ${y}`;
   conn.query(sql, (err, row, fields) => {
-    console.log("error: ", err);
+    console.log('error: ', err);
     if (err) return result(err, null);
-    console.log("데이터: ", row);
+    console.log('데이터: ', row);
     return result(null, row);
   });
 };
