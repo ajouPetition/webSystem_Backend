@@ -20,7 +20,7 @@ users.login = function (info, result) {
     else {
       console.log('데이터: ', row);
       // result(null,{'status':'success','username':row[0].username})
-      const key = process.env.JMT_KEY;
+      const key = process.env.JWT_KEY;
       let token = '';
 
       // jwt.sign(payload, secretOrPrivateKey, [options, callback])
