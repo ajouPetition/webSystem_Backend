@@ -128,7 +128,7 @@ users.agreePosts = function (name, x, y, result) {
                         FROM users 
                         WHERE username = "${name}"))
     AND 
-    b.date BETWEEN DATE_ADD(NOW(),INTERVAL -2 MONTH ) AND NOW()
+    b.date BETWEEN DATE_ADD(NOW(),INTERVAL -60 DAY ) AND DATE_ADD(NOW(),INTERVAL 1 DAY)
   ORDER BY date ASC
   LIMIT ${x}, ${y}`;
   conn.query(sql, (err, row, fields) => {
@@ -150,7 +150,7 @@ users.getPosts = function (name, x, y, result) {
                                   FROM users 
                                   WHERE username = "${name}")
                 AND
-                b.date BETWEEN DATE_ADD(NOW(),INTERVAL -2 MONTH ) AND NOW()
+                b.date BETWEEN DATE_ADD(NOW(),INTERVAL -60 DAY ) AND DATE_ADD(NOW(),INTERVAL 1 DAY)
               LIMIT ${x}, ${y}`;
   conn.query(sql, (err, row, fields) => {
     console.log("error: ", err);

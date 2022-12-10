@@ -63,7 +63,6 @@ exports.findByID = function (req, res) {
 
 // 게시물 작성
 exports.create = function (req, res) {
-  console.log(req.body);
   const today = new Date();
   req.body.date =
     today.getFullYear().toString() +
@@ -72,17 +71,22 @@ exports.create = function (req, res) {
     '-' +
     today.getDate().toString() +
     ' 9:00';
-  console.log(req.body.date);
-  console.log();
-  let sql = 'SELECT max(postID) as ID from board';
-  conn.query(sql, (err, row, fields) => {
+  let sql1 = 'SELECT max(postID) as ID from board';
+  conn.query(sql1, (err, row, fields) => {
     console.log('error: ', err);
     console.log('입력될 ID: ', row[0]['ID'] + 1);
     req.body.postID = row[0]['ID'] + 1;
-    board.create(req.body, function (err, result) {
-      if (err) return res.send(err);
-      return res.json(result);
-    });
+    let sql2 = `SELECT userID FROM users WHERE username="${req.body.username}"`
+    conn.query(sql2, (err, row) =>{
+      console.log('error: ', err);
+      console.log('userID: ', row)
+      req.body.userID = row[0]['userID']
+      // console.log(req.body);
+      board.create(req.body, function (err, result) {
+        if (err) return res.send(err);
+        return res.json(result);
+      });
+    })
   });
 };
 
