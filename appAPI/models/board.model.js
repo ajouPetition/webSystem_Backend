@@ -12,7 +12,7 @@ let board = function (item) {
 
 // 게시물 전체 카운트 수
 board.countPosts = function (option, result) {
-  let sql = `SELECT COUNT(*) FROM board WHERE (date BETWEEN DATE_ADD(NOW(),INTERVAL -2 MONTH ) AND NOW()) `;
+  let sql = `SELECT COUNT(*) FROM board WHERE (date BETWEEN DATE_ADD(NOW(),INTERVAL -60 DAY ) AND DATE_ADD(NOW(),INTERVAL 1 DAY)) `;
   // 종류별
   switch (option.type) {
     case '전체':
@@ -30,7 +30,7 @@ board.countPosts = function (option, result) {
 
 // 만료된 게시물 전체 카운트 수
 board.expireCountPosts = function (option, result) {
-  let sql = `SELECT COUNT(*) FROM board WHERE (date NOT BETWEEN DATE_ADD(NOW(),INTERVAL -2 MONTH) AND NOW())`;
+  let sql = `SELECT COUNT(*) FROM board WHERE (date NOT BETWEEN DATE_ADD(NOW(),INTERVAL -60 DAY) AND DATE_ADD(NOW(),INTERVAL 1 DAY))`;
   // 종류별
   switch (option.type) {
     case '전체':
@@ -52,7 +52,7 @@ board.viewLimit = function (x, y, result) {
                 LEFT OUTER JOIN 
                 (SELECT postID, count(*) AS cnt FROM agree GROUP BY postID) AS a 
                 ON b.postID = a.postID 
-            WHERE b.date BETWEEN DATE_ADD(NOW(),INTERVAL -2 MONTH ) AND NOW()
+            WHERE b.date BETWEEN DATE_ADD(NOW(),INTERVAL -60 DAY ) AND DATE_ADD(NOW(),INTERVAL 1 DAY)
             LIMIT ${x}, ${y}`;
   conn.query(sql, (err, row, fields) => {
     if (err) return result(err, null);
@@ -68,7 +68,7 @@ board.viewTop = function (result) {
                 LEFT OUTER JOIN 
                 (SELECT postID, count(*) AS cnt FROM agree GROUP BY postID) AS a 
                 ON b.postID = a.postID 
-              WHERE b.date BETWEEN DATE_ADD(NOW(),INTERVAL -2 MONTH ) AND NOW()
+              WHERE b.date BETWEEN DATE_ADD(NOW(),INTERVAL -60 DAY ) AND DATE_ADD(NOW(),INTERVAL 1 DAY)
               ORDER BY a.cnt DESC 
               LIMIT 3`
   conn.query(sql, (err, row, fields) => {
@@ -88,10 +88,10 @@ board.expireFilter = function (option, result) {
   // 종류별
   switch (option.type) {
     case '전체':
-      sql = sql + 'WHERE date NOT BETWEEN DATE_ADD(NOW(),INTERVAL -2 MONTH ) AND NOW()'
+      sql = sql + 'WHERE date NOT BETWEEN DATE_ADD(NOW(),INTERVAL -60 DAY ) AND DATE_ADD(NOW(),INTERVAL 1 DAY)'
       break;
     default:
-      sql = sql + 'WHERE type = "' + option.type + '" AND (date NOT BETWEEN DATE_ADD(NOW(),INTERVAL -2 MONTH ) AND NOW())';
+      sql = sql + 'WHERE type = "' + option.type + '" AND (date NOT BETWEEN DATE_ADD(NOW(),INTERVAL 60 DAY ) AND DATE_ADD(NOW(),INTERVAL 1 DAY) )';
       break;
   }
   // 달성여부
@@ -115,20 +115,16 @@ board.filter = function (option, result) {
               FROM board AS b 
                 LEFT OUTER JOIN 
                 (SELECT postID, count(*) AS cnt FROM agree GROUP BY postID) AS a 
-                ON b.postID = a.postID `
+                ON b.postID = a.postID 
+              WHERE date BETWEEN DATE_ADD(NOW(),INTERVAL -60 DAY ) AND DATE_ADD(NOW(),INTERVAL 1 DAY) `
   // 종류별
   switch (option.type) {
     case '전체':
-      sql = sql + 'WHERE date BETWEEN DATE_ADD(NOW(),INTERVAL -2 MONTH ) AND NOW()'
-      break;
-    case '기타':
-      sql = sql + 'WHERE type NOT IN ("교육", "시설") AND date BETWEEN DATE_ADD(NOW(),INTERVAL -2 MONTH ) AND NOW()'
       break;
     default:
-      sql = sql + 'WHERE type = "' + option.type + '" AND date BETWEEN DATE_ADD(NOW(),INTERVAL -2 MONTH ) AND NOW()';
+      sql = sql + 'AND type = "' + option.type + '" ';
       break;
   }
-  // console.log(sql)
   // 정렬순서
   sql = sql + ' ORDER BY';
   if (option.orderBy == 'cnt') {
