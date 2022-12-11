@@ -6,6 +6,7 @@ const board = require('../controller/board.controller');
 router.get('/list', board.viewLimit);
 router.get('/listAll', board.countPosts);
 router.get('/listTop', board.viewTop);
+router.get('/listTopDateAsc', board.viewTopDateAsc);
 router.get('/list/filter', board.filter);
 router.get('/exlistAll', board.expireCountPosts)
 router.get('/exlist/filter', board.expireFilter);

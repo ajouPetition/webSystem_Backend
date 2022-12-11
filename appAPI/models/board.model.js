@@ -78,6 +78,23 @@ board.viewTop = function (result) {
   });
 };
 
+// 만료 임박 게시물 Top 3 조회
+board.viewTopDateAsc = function (result) {
+  let sql = `SELECT b.*, a.cnt 
+              FROM board AS b 
+                LEFT OUTER JOIN 
+                (SELECT postID, count(*) AS cnt FROM agree GROUP BY postID) AS a 
+                ON b.postID = a.postID 
+              WHERE b.date BETWEEN DATE_ADD(NOW(),INTERVAL -60 DAY ) AND DATE_ADD(NOW(),INTERVAL 1 DAY)
+              ORDER BY date ASC 
+              LIMIT 3`;
+  conn.query(sql, (err, row, fields) => {
+    if (err) return result(err, null);
+    console.log('데이터: ', row);
+    return result(null, row);
+  });
+};
+
 // 만료 게시물 필터링 조회
 board.expireFilter = function (option, result) {
   let sql = `SELECT b.*, a.cnt 

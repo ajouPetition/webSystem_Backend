@@ -37,6 +37,14 @@ exports.viewTop = function (req, res) {
   });
 };
 
+// 만료임박 게시물 Top 3 조회
+exports.viewTopDateAsc = function (req, res) {
+  board.viewTopDateAsc(function (err, result) {
+    if (err) return res.send(err);
+    return res.json(result);
+  });
+};
+
 // 게시물 필터링 조회
 exports.filter = function (req, res) {
   board.filter(req.query, function (err, result) {
