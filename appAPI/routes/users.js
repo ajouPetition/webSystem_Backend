@@ -10,7 +10,7 @@ router.get("/posts", users.getPosts);
 router.get("/:username", users.findByID);
 router.post("/register", users.create);
 router.put("/modify", users.update);
-router.delete("/delete/:username", users.delete);
+router.delete("/delete", users.delete);
 
 // 토큰을 검증하는 엔드포인트
 router.get("/auth/payload", auth, (req, res) => {
