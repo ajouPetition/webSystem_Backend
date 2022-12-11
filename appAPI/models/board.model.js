@@ -120,9 +120,9 @@ board.expireFilter = function (option, result) {
   // 달성여부
   console.log(option.pass);
   if (option.pass == 100) {
-    sql = sql + ' AND a.cnt >= 100';
+    sql = sql + ' AND a.cnt >= 10';
   } else {
-    sql = sql + ' AND (a.cnt < 100 OR a.cnt IS NULL)';
+    sql = sql + ' AND (a.cnt < 10 OR a.cnt IS NULL)';
   }
   sql = sql + ` LIMIT ${option.startAt}, ${option.limit}`;
   conn.query(sql, option.type, (err, row, fields) => {
